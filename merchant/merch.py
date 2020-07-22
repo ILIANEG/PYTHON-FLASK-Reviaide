@@ -74,6 +74,22 @@ def addItem():
     else:
         return render_template('add.html')
 
+@app.route('/manage')
+@login_required
+def manage():
+    ownerItems = Product.query.filter_by(ownerId=current_user.get_id()).all()
+    return render_template('manage.html', products=ownerItems)
+
+@app.route('/manage/delete/<int:id>')
+@login_required
+def delete(id):
+    item = Product.query.get_or_404(id)
+    db.session.delete(item)
+    db.session.commit()
+    return redirect('/manage')
+
+
+
 def generateKey():
     symbols = string.ascii_letters + string.digits
     key = ''.join(random.choice(symbols) for i in range(15))
