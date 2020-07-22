@@ -1,30 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'auth.html' %}
 
 {% block head %}
-    <title>Associate Profile</title>
+    <title>Profile</title>
 {% endblock %}
 
-{% block body %}
-
-<div class="container menu" id="sideMenu">
-    <div class="row-3">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">EchoLock</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item active">
-                  <a class="nav-link" href="/add">Add/Delete Item <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/PriceChange">Show Items</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-    </div>
-</div>
-
+{% block content %}
 {% endblock %}

@@ -1,14 +1,28 @@
 {% extends 'base.html' %}
 {% block head %}
-    <title>Associate Login</title>
+    <title>Login</title>
 {% endblock %}
 
 {% block body %}
 <form>
-    <label for="login">Login:</label><br>
-    <input type="text" id="login" name="login"><br>
-    <label for="password">Password:</label><br>
-    <input type="pasword" id="pass" name="pass">
-    <input type="submit" formmethod="post" value="Login">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-4 align-self-center">
+                <label for="login">Login:</label><br>
+                <input type="text" id="login" name="login"><br>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-4 align-self-center">
+                <label for="password">Password:</label><br>
+                <input type="pasword" id="pass" name="pass">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-4 align-self-center">
+                <button id='submitButton' type="submit" class="btn btn-dark" formmethod="post">Submit</button>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}

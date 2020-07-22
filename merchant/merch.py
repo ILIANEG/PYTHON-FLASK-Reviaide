@@ -1,8 +1,9 @@
 from flask import Blueprint
-from flask import Flask, Blueprint, render_template, request, redirect
+from flask import Flask, Blueprint, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user
-from flask_login import login_required
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+import random
+import string
 
 #authStr = Blueprint('authStr', __name__, url_prefix='/store')
 
@@ -20,16 +21,16 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), nullable=False, unique=True)
     password = db.Column(db.Integer, nullable=False, unique=True)
-    def __repr__(self):
-        return 'username: '+str(self.username)+'password: '+str(self.password)
+    products = db.relationship('Product', backref='owner', lazy='dynamic')
 
-class Product(db.Model, UserMixin):
+class Product(db.Model):
     __bind_key__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
-    owner = db.Column(db.ForeignKey('user.username'), nullable=False, unique=True)
-    name = db.Column(db.String(25), nullable=False, unique=False)
-    UPC = db.Column(db.Numeric(12), nullable=True, unique=False)
-    key = db.Column(db.String(12), nullable=False, unique=True)
+    name = db.Column(db.String(50), nullable=False, unique=False)
+    upc = db.Column(db.Numeric(12), nullable=True, unique=False)
+    description = db.Column(db.String(100), nullable=True, unique=False)
+    key = db.Column(db.String(15), nullable=False, unique=True)
+    ownerId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -43,14 +44,14 @@ def login():
         user = User.query.filter_by(username=loginName).first()
         print(user)
         if user is None or user.password != password:
-            return redirect('/error')
+            return redirect('/login')
         else:
             login_user(user)
             return redirect('/profile')
     else:
         return render_template('login.html')
 
-@app.route('/profile')
+@app.route('/profile/')
 @login_required
 def profile():
     return render_template('profile.html')
@@ -59,8 +60,23 @@ def profile():
 @login_required
 def addItem():
     if request.method == 'POST':
-        name = request.form['productName']
-        UPC = request.form['upc']
-        owner = current_user.username
+        pName = request.form['productName']
+        pUPC = request.form['upc']
+        pOwnerId = current_user.get_id()
+        pDescription = request.form['description']
+        pTokenKey = generateKey()
+        while (not (Product.query.filter_by(key=pTokenKey).first() is None)):
+            pTokenKey = generateKey()
+        newProduct = Product(name=pName, upc = pUPC, description=pDescription, key=pTokenKey, ownerId=pOwnerId)
+        db.session.add(newProduct)
+        db.session.commit()
+        return redirect('/addProduct')
+    else:
+        return render_template('add.html')
 
-#app.run()
+def generateKey():
+    symbols = string.ascii_letters + string.digits
+    key = ''.join(random.choice(symbols) for i in range(15))
+    return key
+
+app.run()
