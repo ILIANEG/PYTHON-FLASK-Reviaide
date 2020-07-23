@@ -1,0 +1,14 @@
+{% extends 'auth.html' %}
+{% block head %}
+    <title>QR code</title>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-4 align-self-center">
+            <img src="{{qrSrc}}" alt="QR-code">
+        </div>
+    </div>
+</div>
+{% endblock %}

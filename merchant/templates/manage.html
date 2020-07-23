@@ -19,13 +19,13 @@
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ products[i].name }}</td>
             <td>
-                <a href='manage/reviews/{{products[i].id}}'>Reviews</a><br>
-                <a href='manage/feedback/{{products[i].id}}'>Feedback</a>
+                <a href='manage/reviews/{{products[i].key}}'>Reviews</a><br>
+                <a href='manage/feedback/{{products[i].key}}'>Feedback</a>
             </td>
             <td>
-                <a href='manage/delete/{{products[i].id}}'>Delete</a><br>
-                <a href='manage/edit/{{products[i].id}}'>Edit</a><br>
-                <a href='manage/displayqr/{{products[i].id}}'>QR</a>
+                <a href='manage/delete/{{products[i].key}}'>Delete</a><br>
+                <a href='manage/edit/{{products[i].key}}'>Edit</a><br>
+                <a href='manage/displayqr/{{products[i].key}}'>QR</a>
             </td>
         </tr>
     {% endfor%}
