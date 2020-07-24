@@ -1,0 +1,41 @@
+{% extends 'auth.html' %}
+
+{% block head %}
+    <title>Profile</title>
+{% endblock %}
+
+{% block content %}
+  <br><section id="about">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>About this application</h2>
+          <p class="lead">This web application allows one to add products
+              to the system and allow people to access comments diredtly using 
+              system-generated QR code. You can access such QR code simply by adding
+              product to the system, you can later access this items in "manage items"
+              section.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="why">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Why this application?</h2>
+          <p class="lead">There is no need to create a brand new page and set
+              up server to collect reviews and feedback of your product and business.
+              Your customers add comment or send feedback, and you just see them, it's
+              that simple. This system is specificaly tailored for those who looking
+              for a physical product solution, allowing your customers to access this system
+              directly through QR code and with no registration. All of this ensures that as many
+              people as possible will interact with your product. In future we also will add functinality
+              to automatically answer questions using chat bots
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

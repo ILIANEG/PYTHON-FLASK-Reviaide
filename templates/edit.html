@@ -1,0 +1,23 @@
+{% extends 'authform.html' %}
+{% block head %}
+    <title>Add Item</title>
+{% endblock %}
+
+{% block form %}
+    <h5 class="card-title text-center">Add Item</h5><br>
+    <form method="post">
+        <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" class="form-control" name="productName" id="productName" maxlength="50" placeholder="Name" value='{{defName}}' required>
+        </div>
+        <div class="form-group">
+            <label for="upc">Product UPC</label>
+            <input type="number" max='999999999999' class="form-control" name="upc" id="upc" placeholder="Name" value='{{defUpc}}'>
+        </div>
+        <div class="form-group">
+            <label for="description">Product Description</label>
+            <textarea class="form-control" name="description" id="description" rows="3" required maxlength="150">{{defDesc}}</textarea><br>
+        </div>
+        <button class="btn btn-lg btn-dark btn-block text-uppercase" type="submit" name="submit">Edit</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'auth.html' %}
+
+{% block head %}
+<title>Product Reviews</title>
+{% endblock %}
+
+{% block content %}
+{% for review in reviews %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <h6>{{ review.author }}</h6>
+                    <h5>
+                    {% for i in range(review.rating) %}
+                        ★
+                    {% endfor %}   
+                    </h5><br>
+                    <p class="text-justify">{{ review.comment }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

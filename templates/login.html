@@ -1,0 +1,24 @@
+{% extends 'form.html' %}
+{% block head %}
+    <title>Login</title>
+{% endblock %}
+
+{% block form %}
+{% if error == 1 %}
+<div class="alert alert-danger" role="alert">
+  {{ errorMessage }}
+</div>
+{% endif %}
+  <h5 class="card-title text-center">Sign In</h5><br>
+  <form class="form-signin" method="post">
+    <div class="form-label-group">
+      <input type="text" id="login" name="login" class="form-control" placeholder="Login" required autofocus><br>
+    </div>
+    <div class="form-label-group">
+      <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" required><br>
+    </div>
+    <button class="btn btn-lg btn-dark btn-block text-uppercase" type="submit" name="submit">Sign in</button>
+    <hr class="my-4">
+  </form>
+  <a href='/register'>Create Account</a>
+{% endblock %}

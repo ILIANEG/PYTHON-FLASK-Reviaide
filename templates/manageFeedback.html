@@ -1,0 +1,28 @@
+{% extends 'auth.html' %}
+{% block head %}
+    <title>Manage Products</title>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <br><br><table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Feedback</th>
+        </tr>
+    </thead>
+    <tbody>   
+    {% for i in range(feedbacks|length) %}
+        <tr>
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+                <h6>{{ feedbacks[i].email }}</h6>
+                <p class="text-justify">{{ feedbacks[i].comment }}</p>
+            </td>
+        </tr>
+    {% endfor%}
+    </tbody>
+    </table>
+</div>
+{% endblock %}
