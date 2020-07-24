@@ -1,5 +1,6 @@
 # Reviaide
 Software that allows one to generate QR through which people can interact with products or marketing material
+<<<<<<< HEAD
 
 User Stories:
 - As a business/brand owner i want to be able to collect cuastomer's reviews and feedback
@@ -15,3 +16,7 @@ User Stories:
   - I would like to be able to read comments
   - I would like to be able to wtire a review and submit it
   - I would like to be able to write feedback and submit it
+=======
+  
+  
+>>>>>>> 9c75754349a36d304ee117004e04197fee613bc4
