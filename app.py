@@ -7,11 +7,13 @@
 #Import all critical modules
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import backref
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 import qrcode
 import random
 import string
 import os
+import socket
 
 # Initialize flask application with meta data about static folder
 # Static folder includes css and pictures as well as js (not used yet)
@@ -61,9 +63,9 @@ class Product(db.Model):
     # id of owner of this product, each product have exactly one owner
     ownerId = db.Column(db.Integer, db.ForeignKey('user.id'))
     # reviews for this product, each product have many reviews
-    reviews = db.relationship('Review', backref='product')
+    reviews = db.relationship('Review', backref='product', passive_deletes=True)
     # feedback for this product, each product have many feedbacks
-    feedbacks = db.relationship('Feedback', backref='product')
+    feedbacks = db.relationship('Feedback', backref='product', passive_deletes=True)
 
 # This is database model for reviews, it is related to products
 class Review(db.Model):
@@ -78,7 +80,7 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     # through this entry we relate to product. This is also code that will be 
     # related to QR codes generated
-    productKey = db.Column(db.String(15), db.ForeignKey('product.key'))
+    productKey = db.Column(db.String(15), db.ForeignKey('product.key', ondelete='CASCADE'))
 
 # Database model for Feedback
 class Feedback(db.Model):
@@ -87,7 +89,7 @@ class Feedback(db.Model):
     #Instead of author we use once' email to communicate back to customer
     email = db.Column(db.String(80), nullable=True)
     comment = db.Column(db.String(150), nullable=False)
-    productKey = db.Column(db.String(15), db.ForeignKey('product.key'))
+    productKey = db.Column(db.String(15), db.ForeignKey('product.key', ondelete='CASCADE'), nullable=False)
 
 # user loader for our login manager
 @login_manager.user_loader
@@ -288,10 +290,9 @@ def generateKey():
 
 # This helper methods delete product
 def deleteProduct(id):
-    item = Product.query.filter_by(key=id).first()
+    db.session.query(Product).filter(Product.key==id).delete()
     if os.path.isfile('static/images/'+id+'.png'):
         os.remove("static/images/"+id+'.png')
-    db.session.delete(item)
     db.session.commit()
 
 # this is helper method to add product to the system
@@ -299,7 +300,7 @@ def addProduct(nName, nUpc, nDescription):
     productKey = generateKey()
     while (not (Product.query.filter_by(key=productKey).first() is None)):
         productKey = generateKey()
-    img = qrcode.make('http://192.168.0.13:5000/item/' + productKey)
+    img = qrcode.make('http://'+ '192.168.0.13' +':5000/item/' + productKey)
     img.save('static/images/'+productKey+'.png')
     nOwnerId = current_user.get_id()
     newProduct = Product(key=productKey, name=nName, upc = nUpc, description=nDescription, ownerId=nOwnerId)

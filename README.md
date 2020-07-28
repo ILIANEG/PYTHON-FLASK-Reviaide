@@ -31,6 +31,10 @@ How to Build (Version of Python used: Version 3.8.2, on Unix based system (teste
   - pip install SQLAlchemy
   - pip install flask-login
   - pip install qrcode
+* IMPORTANT: there is one manual configuration that has to be done
+in order to fully test the system, namely, in app.py line 303 you need to 
+substitute string '192.168.0.13' with your local public ipv4 (usually starts with 192.168..., for me it is 192.168.0.13, can be found using ipconfig in CMD or ). On stage of deployment this adress can be substituted with domain, but for now
+it has to be hacked like that, i have not found any reliable way to adress it (most solutions work in particular OS, or with particular web configuration and so on)
 * let's run application now; while being in virtual environemnt, in project directory:
   - python3 app.py 
   - start web application using http://localhost:5000/
@@ -49,8 +53,99 @@ How to Mofidy:
     - Product owner should have option to delete the feedback and claim review as fraudulant (but can not delete, it is feature for further investigation on our side). In addition, profile page (main page of product owner after login) can have dashboard showing how many people interacted with his/her products and maybe some highlights about review
     - Security-wise, the form handling should be changed, as of now it is vaunorable to sql injection attaks. Moreover, login system have to be enchaced with secured session. Those changes are crucial, and it can not be called an application until those security concerns are resolved
     - Dtatabse model can be enchanced through adding intermediate level between product, comment and feedback, and QR code. For exmaple unique token is attached to product, then this token can be attached to many same products with different owners. But this is mpore advanced development for scaling system (as ofnow we assume each product have one owner only)
+    - More comprehensive registration system has to be developed. Right now it is merely exist for proof of concept and to add user to database
 
 Tests:
 
 TEST 01:
-- 
+*start application and navigate to http://localhost:5000
+- With empty user database (by default in github) try to login using 
+  login: test
+  password: test
+* Expected result: redirected to login page with error message "login or password are not matching"
+
+TEST 02:
+- With empty user database (by default in github) navigate to Create Account link and put arbitrary login and password (in this case let's use login: test, password: test)
+* Expected result: redirected to login page without any error messages
+
+TEST 03:
+- Login with wrong login and/or password while having at least one user in database (see TEST 02) (for example login: login, password: test)
+* Expected result: redirected to login page with error message "login or password are not matching"
+
+TEST 04: 
+- Without being logged in into the system try to navigate to http://localhost:5000/profile
+* Expected result: redirected to login page without any error message
+
+TEST 05:
+- Login into the system with valid credentials (if test cases followed, loggin: test password: test)
+* expected result: redirected to profile page with "About this application, etc."
+
+TEST 06:
+- Logout of the system (presss square symbol and navigate to logout) and perform TEST 04
+* same result expected
+
+TEST 07:
+- After logging back in and navigate to "Add Product". Add product under any name (under 100 symbols), any upc (under 12 digits) and any product description (under 1000 symbols)
+* Expected result: product is added and user is automatically redirected back to adding product page (ready to add next product)
+
+TEST 08:
+- Add another product (Test 07) but this time put more then 100 characters name.
+* Expected result: Characters beyond 100 are not being recorded
+
+TEST 09:
+- Add another product (Test 07) but this time put more then 1000 characters description.
+* Expected result: Characters beyond 1000 are not being recorded
+
+TEST 10:
+- Add another product (Test 07) but this time put non-numeric UPC and press Add Item.
+* Expected result: user is notified about numeric requirment for UPC field
+
+TEST 11:
+- Add another product (Test 07) but this time put UPC beyond 12 numbers.
+* Expected result: user is notified about uper boundry for UPC entry
+
+TEST 12:
+- Add another product (Test 07) but this time leave name as a blank
+* Expected result: Web browser is not accepting the form, informing user that product name is a required field
+
+TEST 13:
+- Add another product (Test 07) but this time leave Product UOC as a blank
+* Expected result: same as Test 07 result
+
+TEST 14:
+- Add another product (Test 07) but this time leave description as a blank
+* Expected result: Web browser is not accepting the form, informing user that product description is a required field
+
+TEST 15:
+- Navigate to "Manage Products". Beside one of the product click on "QR" link
+* Expected result: new page with QR code picture was launched (you can return back by clicking on "Reviaide" logo)
+
+TEST 16:
+- Navigate to "Manage Products". Beside one of the product click on "Delete" link
+* Expected result: Manage Product page should update and deleted product should disappear. If there was only one product in the system, table will be completely empty
+
+TEST 17:
+- While having at least one product in the system (Test 07) navigate to "Manage products" tab. Beside one of the product click on "Edit"
+* Expected result: Redirected to a page similar to Add Product page, however all fields filled with current product information
+
+TEST 18:
+- Make sure that there is at least 1 product in the system. Navigate to manage product and press QR beside one of the products. Make sure that ip adress in your copy of software is presetted (see "How to build section", app.py line 303 that's where ip should be hardcoded). Take any mobile device (tested with android device), open camera point to the opened QR code and follow the link
+* Expected result: Phone is redirected to page with buttons "Reviews" and "Feedback".
+
+TEST 19:
+- On mobile page (TEST 18) press REVIEWS, Press the button will redirect to the page (empty if no reviews currently present). Press Add Review, put Name, rating and review and Add Review
+* Expected result: Redirected to Reviews page with new review added, and stars representing rating
+
+Test 20.1:
+- On mobile page (TEST 18) press "FEEDBACK". input all required information and press "SHARE"
+* Expected result: redirected to main mobile page, feedback is recorded and can be accessed by peoduct owner
+
+Test 20.2:
+- After adding reviews on mobile device, navigate to Manage Products page and press "Reviews" link.
+* Expected result: page with all reviews is opened
+
+Test 20.3:
+- After adding feedback on mobile device, navigate to Manage Products page and press "Feedback" link.
+* Expected result: page with all feedback is opened with information about email and feedback content
+
+***NOTE: Currently deletion is not working properly, i can not trouble shoot it right now, while i setted proper cascading, relationship database does not delete comments and feedback when product is deleted. It will be fixed later**
