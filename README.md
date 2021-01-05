@@ -1,3 +1,7 @@
+# NOTE:
+This project was a deliverable for my Software engineering course. In this project i have further learned Flask in conjuctions with some libraries (for QR code generation and Authentification)
+
+
 # Reviaide
 Software that allows one to generate QR through which people can interact with products or marketing material
 
